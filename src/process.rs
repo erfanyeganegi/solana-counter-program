@@ -1,4 +1,7 @@
+pub mod handler;
+
 use borsh::{BorshDeserialize, BorshSerialize};
+use handler::{handle_decrement, handle_increment, handle_reset, handle_update};
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     entrypoint::ProgramResult,
@@ -25,22 +28,10 @@ pub fn process_instructions(
     let mut counter_account = Counter::try_from_slice(&account.data.borrow())?;
 
     match instruction {
-        CounterInstruction::Increment(value) => {
-            counter_account.counter += value;
-        }
-        CounterInstruction::Decrement(value) => {
-            counter_account.counter = if counter_account.counter > value {
-                counter_account.counter - value
-            } else {
-                0
-            };
-        }
-        CounterInstruction::Update(value) => {
-            counter_account.counter = value;
-        }
-        CounterInstruction::Reset => {
-            counter_account.counter = 0;
-        }
+        CounterInstruction::Increment(value) => handle_increment(&mut counter_account, value),
+        CounterInstruction::Decrement(value) => handle_decrement(&mut counter_account, value),
+        CounterInstruction::Update(value) => handle_update(&mut counter_account, value),
+        CounterInstruction::Reset => handle_reset(&mut counter_account),
     }
 
     counter_account.serialize(&mut &mut account.data.borrow_mut()[..])?;
