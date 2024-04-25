@@ -1,0 +1,13 @@
+[package]
+name = "counter"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+borsh = "1.4.0"
+borsh-derive = "1.4.0"
+solana-program = "1.18.11"
+
+[dev-dependencies]
+solana-program-test = "1.18.11"
+solana-sdk = "1.18.11"
